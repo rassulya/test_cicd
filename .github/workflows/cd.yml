@@ -13,19 +13,14 @@ jobs:
   deploy:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout source repo
-        # Use the latest major version for ongoing support
         uses: actions/checkout@v4
         with:
           lfs: true
-          # fetch-depth: 0 downloads the full history, fixing the "shallow update" error
           fetch-depth: 0
-
       - name: Push to HF Space
         env:
-          # Securely map the secret to an environment variable for this step only
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           # Use the correct syntax for variables and push HEAD to main for clarity
