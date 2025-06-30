@@ -8,7 +8,6 @@ on:
 env:
   HF_USERNAME: rassulya
   HF_SPACE: test_cicd
-  HF_TOKEN: ${{ secrets.HF_TOKEN }}
 
 jobs:
   deploy:
@@ -17,8 +16,17 @@ jobs:
 
     steps:
       - name: Checkout source repo
-        uses: actions/checkout@v3
+        # Use the latest major version for ongoing support
+        uses: actions/checkout@v4
         with:
           lfs: true
-      - name: Push to HF Space  
-        run: git push --force https://HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/${{ env.HF_USERNAME }}/${{ env.HF_SPACE }} main
+          # fetch-depth: 0 downloads the full history, fixing the "shallow update" error
+          fetch-depth: 0
+
+      - name: Push to HF Space
+        env:
+          # Securely map the secret to an environment variable for this step only
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Use the correct syntax for variables and push HEAD to main for clarity
+          git push --force https://${{ env.HF_USERNAME }}:${HF_TOKEN}@huggingface.co/spaces/${{ env.HF_USERNAME }}/${{ env.HF_SPACE }} HEAD:main
