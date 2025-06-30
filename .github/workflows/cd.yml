@@ -33,4 +33,5 @@ jobs:
           cd ../hf-space
           git add .
           git commit -m "🚀 Auto-deploy from PR merge [skip ci]" || echo "No changes to commit"
-          git push https://${{ secrets.HF_TOKEN }}@huggingface.co/spaces/${{ env.HF_USERNAME }}/${{ env.HF_SPACE }} HEAD:main
+          git remote set-url origin https://${{ secrets.HF_TOKEN }}@huggingface.co/spaces/${{ env.HF_USERNAME }}/${{ env.HF_SPACE }}
+          git push origin HEAD:main
